@@ -39,6 +39,8 @@ public interface IMenu
     /// </summary>
     BasePlugin Plugin { get; }
 
+    PostSelectAct PostSelectAct { get; set; }
+
     /// <summary>
     /// Adds an item to the menu with a specified display text and selection action.
     /// </summary>

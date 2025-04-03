@@ -1,6 +1,7 @@
 ﻿using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Commands;
+using CounterStrikeSharp.API.Modules.Entities;
 using CS2MenuManager.API.Enum;
 using CS2MenuManager.API.Interface;
 using CS2MenuManager.API.Menu;
@@ -44,6 +45,8 @@ public abstract class BaseMenu(string title, BasePlugin plugin) : IMenu
     /// Gets the plugin instance.
     /// </summary>
     public BasePlugin Plugin { get; } = plugin;
+
+    public PostSelectAct PostSelectAct { get; set; } = PostSelectAct.Nothing;
 
     /// <summary>
     /// Adds an item to the menu with a specified display text and selection action.
@@ -268,7 +271,19 @@ public abstract class BaseMenuInstance(CCSPlayerController player, IMenu menu) :
         ItemOption menuOption = Menu.ItemOptions[menuItemIndex];
         if (menuOption.DisableOption != DisableOption.None) return;
 
-        Close();
+        switch (menu.PostSelectAct)
+        {
+            case PostSelectAct.Close:
+                Close();
+                break;
+            case PostSelectAct.Reset:
+                Close();
+                Display();
+                break;
+            case PostSelectAct.Nothing:
+                break;
+        }
+
         menuOption.OnSelect?.Invoke(Player, menuOption);
     }
 
